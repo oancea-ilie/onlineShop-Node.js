@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "Rozelle",
+    "email": "rkaveney0@symantec.com",
+    "password": "Vet1KYLp9QV",
+    "billing_address": "687 Basil Street",
+    "phone": "396-112-3797"
+  },
+  {
+    "id": 2,
+    "name": "Guglielmo",
+    "email": "gtoffalo1@parallels.com",
+    "password": "IRhbm0IQki",
+    "billing_address": "704 Namekagon Street",
+    "phone": "153-656-4124"
+  },
+  {
+    "id": 3,
+    "name": "Egor",
+    "email": "ecaverhill2@angelfire.com",
+    "password": "9JhitU1Ca",
+    "billing_address": "7 Ramsey Street",
+    "phone": "877-363-9752"
+  },
+  {
+    "id": 4,
+    "name": "Carol-jean",
+    "email": "cbielfeldt3@mayoclinic.com",
+    "password": "YPhiLdczZA8X",
+    "billing_address": "88 Lunder Place",
+    "phone": "757-707-4727"
+  },
+  {
+    "id": 5,
+    "name": "Susanetta",
+    "email": "scunnah4@reddit.com",
+    "password": "C6kRIWN5SLk",
+    "billing_address": "3121 Nevada Court",
+    "phone": "323-470-7058"
+  },
+  {
+    "id": 6,
+    "name": "Gwendolin",
+    "email": "gcleverly5@eepurl.com",
+    "password": "VTTHuCT",
+    "billing_address": "3899 Marcy Place",
+    "phone": "981-169-7269"
+  },
+  {
+    "id": 7,
+    "name": "Palm",
+    "email": "pgoch6@usa.gov",
+    "password": "JlRdoUxKhv",
+    "billing_address": "8 Dayton Point",
+    "phone": "474-311-8571"
+  },
+  {
+    "id": 8,
+    "name": "Syman",
+    "email": "shuguet7@deviantart.com",
+    "password": "WXaKC8oYd",
+    "billing_address": "8471 Sloan Crossing",
+    "phone": "791-854-0587"
+  },
+  {
+    "id": 9,
+    "name": "Riane",
+    "email": "rwhittlesey8@comcast.net",
+    "password": "1YpXIcD7A",
+    "billing_address": "626 Chinook Road",
+    "phone": "399-454-5448"
+  },
+  {
+    "id": 10,
+    "name": "TEST2",
+    "email": "TEST@youku.com",
+    "password": "TEST",
+    "billing_address": "3 West Trail",
+    "phone": "481-702-6091"
+  }
+]
