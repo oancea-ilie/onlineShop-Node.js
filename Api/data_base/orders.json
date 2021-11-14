@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "customer_id": 2,
+    "ammount": 3,
+    "order_address": "Order Address 1",
+    "order_date": "14-11-2021"
+  },
+  {
+    "id": 2,
+    "customer_id": 4,
+    "ammount": 5,
+    "order_address": "Order Address 2",
+    "order_date": "14-11-2021"
+  },
+  {
+    "id": 3,
+    "customer_id": 3,
+    "ammount": 7,
+    "order_address": "Order Address 3",
+    "order_date": "14-11-2021"
+  },
+  {
+    "id": 4,
+    "customer_id": 2,
+    "ammount": 8,
+    "order_address": "Order Address 4",
+    "order_date": "14-11-2021"
+  }
+]

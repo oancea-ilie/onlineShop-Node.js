@@ -1,5 +1,4 @@
 
-
 export default class OrderDetails{
     constructor (id,order_id,product_id,price,quantity){
         this.id = id;

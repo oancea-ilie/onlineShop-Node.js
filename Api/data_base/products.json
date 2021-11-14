@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Telefon",
+    "price": 3000,
+    "description": "Telefon Iphone 14",
+    "image": "img1.png",
+    "category": "telefoane"
+  },
+  {
+    "id": 2,
+    "name": "Desktop 1",
+    "price": 4000,
+    "description": "Desktop Vikings 2312",
+    "image": "img2.png",
+    "category": "desktop"
+  },
+  {
+    "id": 3,
+    "name": "Leptop 1",
+    "price": 5000,
+    "description": "Lenovo Legion Y04021",
+    "image": "img3.png",
+    "category": "leptopuri"
+  },
+  {
+    "id": 4,
+    "name": "Televizor Samsung",
+    "price": 5000,
+    "description": "Televizor Samsung QWDQ12",
+    "image": "img4.png",
+    "category": "televizoare"
+  },
+  {
+    "id": 5,
+    "name": "Sistem Logitech",
+    "price": 5000,
+    "description": "Sistem Audio Logitech Z9012",
+    "image": "img5.png",
+    "category": "sisteme audio",
+    "create_date": false,
+    "stock": false
+  }
+]
