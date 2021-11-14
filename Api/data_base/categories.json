@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "telefoane",
+    "description": "Descriere telefoane",
+    "image": "img1.png"
+  },
+  {
+    "id": 2,
+    "name": "desktop/pc",
+    "description": "Descriere desktop",
+    "image": "img1.png"
+  },
+  {
+    "id": 3,
+    "name": "leptop",
+    "description": "Descriere leptop",
+    "image": "img1.png"
+  },
+  {
+    "id": 4,
+    "name": "televizoare",
+    "description": "Descriere televizoare",
+    "image": "img1.png"
+  },
+  {
+    "id": 5,
+    "name": "sisteme audio",
+    "description": "Descriere sisteme audio",
+    "image": "TEST"
+  }
+]
