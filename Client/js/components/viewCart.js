@@ -1,8 +1,8 @@
 import viewHome from "./viewHome.js"
-import ProductsController from "../controller/productsController.js";
 import viewUserInterface from "./viewUserInterface.js";
 import viewProduct from "./viewProduct.js";
 import viewFavorite from "./viewFavorite.js";
+import Data from "../data.js";
 
 
 export default class viewCart{
@@ -34,19 +34,25 @@ export default class viewCart{
         this.favoriteBtn.addEventListener('click',this.handleBigFavorite);
 
         //main
+        this.data = new Data();
+        this.setToggleCategories();
+
         this.cosGolText = document.querySelector('.cos-gol-text');
         this.cosGolImg = document.querySelector('.cos-gol-img');
 
         this.container = document.querySelector('.cart-container'); 
-        this.productController = new ProductsController();
-        
-        this.getAllProducts();
-        this.allProducts = document.querySelectorAll('.cart-product');
 
-        this.closeBtns = document.querySelectorAll(".cart-product i");
-        this.handleCloseBtn();
-        this.handlePriceProducts();
-        this.handleTotalPrice();
+
+        this.getAllProducts();
+
+        // nu e asyncrona !!! nu stiu de ce nu se asteapta dupa this.getAllProducts();
+        this.allProducts = document.querySelectorAll('.cart-product');
+        console.log(this.allProducts);
+
+        // this.closeBtns = document.querySelectorAll(".cart-product i");
+        // this.handleCloseBtn();
+        // this.handlePriceProducts();
+        // this.handleTotalPrice();
     }
 
     header=()=>{
@@ -83,29 +89,7 @@ export default class viewCart{
         <main>
 
         <section class="toggle-section">
-            <section class="toggle-section-flex categorie-telefon">
-                <img src="svg/phone.svg" alt="">
-                <p>Telefoane Mobile</p>
-            </section>
 
-            <section class="toggle-section-flex categorie-pc" >
-                <img src="svg/pc.svg" alt="">
-                <p>Desktop Pc</p>
-            </section>
-
-            <section class="toggle-section-flex categorie-leptop">
-                <img src="svg/laptop.svg" alt="">
-                <p>Leptop / Notebook</p>
-            </section>
-
-            <section class="toggle-section-flex categorie-tv">
-                <img src="svg/tv.svg" alt="">
-                <p>Televizoare</p>
-            </section>
-            <section class="toggle-section-flex categorie-audio" >
-                <img src="svg/audio.svg" alt="">
-                <p>Sisteme Audio</p>
-            </section>
         </section>
 
             <section class="cart-container">
@@ -118,18 +102,33 @@ export default class viewCart{
         `
     }
 
-    getAllProducts=()=>{
-        let i = 0;
+    setToggleCategories= async()=>{
+        let categoris = await this.data.getCategories();
         
-        this.productController.list.forEach(e=>{
-            if(e.cartStatus ==1){
-                this.setProduct(e);
-                i=1;
+        this.toggleSection.innerHTML = '';
+
+            for(let cat of categoris){
+                this.toggleSection.innerHTML +=
+                `
+                <section class="toggle-section-flex categorie-${cat.name}">
+                    <img src="${cat.image}" alt="">
+                    <p>${cat.description}</p>
+                </section>
+                `;
             }
-        });
 
+    }
 
-        if(i ==1){
+    getAllProducts= async()=>{
+
+        let allProducts = await this.data.getProducts();
+
+        let filtrat = allProducts.filter(e=>e.cartStatus == true);
+
+        filtrat.forEach(e=>this.setProduct(e));
+        
+
+        if(filtrat.length >0){
             this.setCartSumar();
             this.cosGolImg.style.display = 'none';
             this.cosGolText.style.display = 'none';
@@ -162,6 +161,7 @@ export default class viewCart{
     }
 
     setCartSumar=(obj)=>{
+        
         this.container.innerHTML +=
         `
         <section class="cart-sumar">

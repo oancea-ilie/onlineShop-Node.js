@@ -1,44 +1,74 @@
 [
   {
     "id": 1,
-    "name": "Telefon",
+    "name": "Iphone 12",
     "price": 3000,
-    "description": "Telefon Iphone 14",
-    "image": "img1.png",
-    "category": "telefoane"
+    "description": "Iphone 12, 200 GB",
+    "image": "img/telefon.jpg",
+    "category": "telefoane",
+    "create_date": "25-11-2021",
+    "stock": 5,
+    "favariteStatus": true,
+    "cartStatus": false
   },
   {
     "id": 2,
     "name": "Desktop 1",
     "price": 4000,
     "description": "Desktop Vikings 2312",
-    "image": "img2.png",
-    "category": "desktop"
+    "image": "img/desktop.jpg",
+    "category": "desktop",
+    "create_date": "25-11-2021",
+    "stock": 5,
+    "favariteStatus": false,
+    "cartStatus": false
   },
   {
     "id": 3,
     "name": "Leptop 1",
     "price": 5000,
     "description": "Lenovo Legion Y04021",
-    "image": "img3.png",
-    "category": "leptopuri"
+    "image": "img/leptop.jpg",
+    "category": "leptopuri",
+    "create_date": "25-11-2021",
+    "stock": 5,
+    "favariteStatus": false,
+    "cartStatus": false
   },
   {
     "id": 4,
     "name": "Televizor Samsung",
     "price": 5000,
     "description": "Televizor Samsung QWDQ12",
-    "image": "img4.png",
-    "category": "televizoare"
+    "image": "img/televizor.jpg",
+    "category": "televizoare",
+    "create_date": "25-11-2021",
+    "stock": 5,
+    "favariteStatus": false,
+    "cartStatus": false
   },
   {
     "id": 5,
     "name": "Sistem Logitech",
     "price": 5000,
     "description": "Sistem Audio Logitech Z9012",
-    "image": "img5.png",
+    "image": "img/boxe.jpg",
     "category": "sisteme audio",
-    "create_date": false,
-    "stock": false
+    "create_date": "25-11-2021",
+    "stock": 5,
+    "favariteStatus": false,
+    "cartStatus": false
+  },
+  {
+    "id": 6,
+    "name": "Iphone 14",
+    "price": 5000,
+    "description": "Iphone 14, 500 GB",
+    "image": "img/telefon.jpg",
+    "category": "sisteme audio",
+    "create_date": "25-11-2021",
+    "stock": 5,
+    "favariteStatus": false,
+    "cartStatus": false
   }
 ]

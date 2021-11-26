@@ -1,13 +1,11 @@
 import viewHome from "./viewHome.js"
 import viewFavorite from "./viewFavorite.js"
-import CategoriesController from "../controller/categoriesController.js";
-import ProductsController from "../controller/productsController.js";
 import viewProduct from "./viewProduct.js";
 import viewCart from "./viewCart.js";
+import Data from "../data.js";
 
 export default class viewUserInterface{
-    constructor(username){
-        this.username = username;
+    constructor(){
         this.body = document.querySelector('body');
         this.header();
         this.main();
@@ -32,19 +30,10 @@ export default class viewUserInterface{
         this.cardBtn = document.querySelector('.cart-btn');
         this.cardBtn.addEventListener('click',this.handleCardBtn);
 
-        this.categoryController = new CategoriesController();
-        this.setCategories();
-        this.setToggleCategories();
-        
-        this.productController = new ProductsController();
-        this.setProductsToCategories();
-        
-        this.favorite = document.querySelectorAll('.main-card-categorie i');
-        this.handleFavoriteStatus();
-        this.handleFavorite();
 
-        this.allProducts = document.querySelectorAll('.main-card-categorie');
-        this.handleAllProducts();
+        this.data = new Data();
+        this.productFunctionality();
+    
     }
 
     header=()=>{
@@ -114,28 +103,108 @@ export default class viewUserInterface{
         `
     }
 
-    setCategories=()=>{
-        this.categorii.innerHTML = '';
+    productFunctionality= async()=>{
+        try{
+            await this.setCategories();
+            await this.setProductsToCategories();
+            await this.setToggleCategories();
 
-        for(let obj of this.categoryController.list){
-            this.categoryController.toCard(obj);
+            this.favorite = document.querySelectorAll('.main-card-categorie i');
+            await this.handleFavorite();
+            await this.handleFavoriteStatus();
+
+            this.allProducts = document.querySelectorAll('.main-card-categorie');
+            await this.handleAllProducts();
+
+        }catch(e){
+            console.log('ERORE:',e);
         }
     }
 
-    setToggleCategories=()=>{
+    setCategories = async()=>{
+        this.categorii.innerHTML = '';
+        let categories = await this.data.getCategories();
 
+        if(categories){
+            for(let c of categories){
+                this.categorii.innerHTML +=
+                `
+                    <h2>${c.description}</h2>
+                    <section class="main-categorie main-categorie-${c.name}">
+            
+                    </section>
+
+                `
+            }
+        }
+    }
+
+    setToggleCategories= async()=>{
+        let categoris = await this.data.getCategories();
+        
         this.toggleSection.innerHTML = '';
 
-        for(let obj of this.categoryController.list){
-            this.categoryController.toToggleCategories(obj);
-        }
+            for(let cat of categoris){
+                this.toggleSection.innerHTML +=
+                `
+                <section class="toggle-section-flex categorie-${cat.name}">
+                    <img src="${cat.image}" alt="">
+                    <p>${cat.description}</p>
+                </section>
+                `;
+            }
+
     }
 
-    setProductsToCategories=()=>{
+    setProductsToCategories= async(id)=>{
 
-        for(let obj of this.productController.list){
-            this.productController.toCategory(obj);
+        try{
+
+            let producs = await this.data.getProducts(); //toate produsele
+
+            let categoris = await this.data.getCategories(); //toate categoriile
+
+            for(let category of categoris){
+
+                // retine toate productsCategory ce au propietatea category_id == id
+                let  prod_cat = await this.data.getProductsCategoryByCategory(category.id); 
+
+                let cat;
+                if(prod_cat){
+                    cat = document.querySelector(`.main-categorie-${category.name}`);
+
+                    for(let pc of prod_cat){
+
+                        let filtrate = producs.filter(e=>e.id == pc.product_id);
+
+                        filtrate.forEach(e=>{
+                                this.toProduct(e,cat);
+                        });
+                        
+                    }
+                }
+
+            }
+
+
+        }catch(e){
+
+            console.log(e);
         }
+
+    }
+
+    toProduct=(product,categorie)=>{
+        categorie.innerHTML +=
+        `
+        <section class="main-card-categorie" id="id${product.id}">
+            <img src="${product.image}" alt="">
+            <i class="far fa-heart"></i>
+            <h2>${product.name}</h2>
+            <p>${product.description}</p>
+            <h3 class="pret-produs">${product.price} Lei</h3>
+        </section>
+        `;
     }
 
     handleToggleBtn=()=>{
@@ -155,18 +224,22 @@ export default class viewUserInterface{
 
     handleBigFavorite=()=>{
 
-        let nou = new viewFavorite(this.username);
+        let nou = new viewFavorite();
     }
 
-    handleFavorite=()=>{
+    handleFavorite= async()=>{
         this.favorite.forEach((e)=>{
 
-                e.addEventListener('click',()=>{
-                    let productName = e.parentNode.children[2].textContent;
-                    let status= this.productController.getFavoriteStatus(productName);
-                    
-                    if(status ==0){
-                        this.productController.setFavoriteProduct(productName,1);
+                e.addEventListener('click', async ()=>{
+                    let card = e.parentNode;
+                    let id = card.getAttribute('id').slice(2);
+                    let currProduct = await this.data.getProductById(id);
+
+                    if(currProduct.favariteStatus == false){
+                        currProduct.favariteStatus = true;
+                        
+                        await this.data.updateProduct(currProduct.id,currProduct);
+
                         e.classList.remove('far');
                         e.classList.remove('fa-heart');
                 
@@ -174,7 +247,9 @@ export default class viewUserInterface{
                         e.classList.add('fa-heart');
                         
                     }else{
-                        this.productController.setFavoriteProduct(productName,0);
+
+                        currProduct.favariteStatus = false;
+                        await this.data.updateProduct(currProduct.id,currProduct);
 
                         e.classList.remove('fas');
                         e.classList.remove('fa-heart');
@@ -187,47 +262,51 @@ export default class viewUserInterface{
         });
     }
 
-    handleFavoriteStatus=()=>{
-        let allFavoriteIcons = document.querySelectorAll('.fa-heart');
+    handleFavoriteStatus= async()=>{
+        let allFavoriteIcons = document.querySelectorAll('.main-categorie .fa-heart');
 
+        for(let i = 0; i< allFavoriteIcons.length; i++){
 
-        for(let i = 1; i< allFavoriteIcons.length; i++){
-            let e = allFavoriteIcons[i];
+            let card = allFavoriteIcons[i].parentNode;
 
-            let product = e.parentNode.children[2].textContent;
-            let status  = this.productController.getFavoriteStatus(product);
+            let id = card.getAttribute('id').slice(2);
 
-            if(status == 1){
+            let currProduct = await this.data.getProductById(id);
 
-                if(e.classList.contains('far')){
-                   e.classList.remove('far');
+            if(currProduct.favariteStatus == true){
+
+                if(allFavoriteIcons[i].classList.contains('far')){
+                    allFavoriteIcons[i].classList.remove('far');
                 }
 
-                e.classList.add('fas');
+                allFavoriteIcons[i].classList.add('fas');
             }else{
 
-                if(e.classList.contains('fas')){
-                    e.classList.remove('fas');
+                if(allFavoriteIcons[i].classList.contains('fas')){
+                    allFavoriteIcons[i].classList.remove('fas');
                 }
 
-                e.classList.add('far');
+                allFavoriteIcons[i].classList.add('far');
             }
         }
     }
 
-    handleAllProducts=()=>{
-        this.allProducts.forEach(e=>{
-            e.addEventListener('click',(el)=>{
-                let fav = e.children[1];
-                if(el.target!= fav){
-                    let productName = e.children[2].textContent;
-                    let product = this.productController.getProductByName(productName);
-    
-                    let nou = new viewProduct(product,this.username);
+    handleAllProducts= async()=>{
+        
+        for(let obj of this.allProducts){
+            
+            let id = obj.getAttribute('id').slice(2);
+            let currProduct = await this.data.getProductById(id);
+
+            obj.addEventListener('click',(el)=>{
+                let fav = obj.children[1];
+
+                if(el.target != fav){
+
+                    let nou = new viewProduct(currProduct,currProduct.id);
                 }
             })
-
-        });
+        }
     }
 
     handleCardBtn=()=>{

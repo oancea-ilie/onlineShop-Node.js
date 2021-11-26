@@ -1,5 +1,4 @@
-import CustomersController from "../controller/customersController.js";
-import Customers from "../model/customers.js";
+import Data from "../data.js";
 import viewHome from "./viewHome.js";
 
 
@@ -17,17 +16,17 @@ export default class viewRegister{
         this.phone = document.querySelector('.phone-register');
 
         this.registerBtn = document.querySelector('.register-btn');
-        this.registerBtn.addEventListener('click',this.handleRegister);
 
         this.homeBtn = document.querySelector('.home-btn');
         this.homeBtn.addEventListener('click',this.handleHome);
 
-        this.customerController = new CustomersController();
+        this.data = new Data();
 
         this.eror = document.querySelector('.eror');
         this.eror.style.color = 'red';
         this.eror.style.textAlign = 'center';
 
+        this.asyncronHandler();
     }
 
 
@@ -60,9 +59,35 @@ export default class viewRegister{
         `
     }
 
-    toObj=()=>{
-        let id =this.customerController.list[this.customerController.list.length-1].id + 1;
-        let obj =  new Customers(id,this.name.value,this.email.value,this.pass.value,this.adress.value,this.phone.value);
+
+    asyncronHandler= async()=>{
+        try{
+
+            this.registerBtn.addEventListener('click',async()=>{
+
+                let obj = await this.toObj();
+
+                this.handleRegister(obj);
+            });
+
+        }catch(e){
+            console.log(e);
+        }
+    }
+
+    toObj=async()=>{
+
+        let allCustomers = await this.data.getCustomers();
+        let custmerId = allCustomers[allCustomers.length-1].id;
+        let obj = {
+            id: custmerId+1,
+            name: this.name.value,
+            email: this.email.value,
+            password: this.pass.value,
+            billing_address: this.adress.value,
+            phone: this.phone.value
+        }
+
         return obj;
     }
 
@@ -76,12 +101,13 @@ export default class viewRegister{
         return ok;
     }
 
-    handleRegister=()=>{
+    handleRegister=(obj)=>{
         let ok = this.RegisterCeck();
 
         if(ok == 0){
-            let obj = this.toObj();
-            this.customerController.create(obj);
+            this.data.addCustomer(obj);
+
+
             this.eror.innerHTML = `Registration complete!<br>You can Login In now!`;
             this.eror.style.color = 'green';
 

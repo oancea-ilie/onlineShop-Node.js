@@ -1,8 +1,8 @@
 import viewHome from "./viewHome.js"
-import ProductsController from "../controller/productsController.js";
 import viewUserInterface from "./viewUserInterface.js";
 import viewProduct from "./viewProduct.js";
 import viewCart from "./viewCart.js";
+import Data from "../data.js";
 
 export default class viewFavorite{
     constructor(username){
@@ -32,19 +32,18 @@ export default class viewFavorite{
 
         //main
 
+        this.data = new Data();
+        this.setToggleCategories();
+
         this.container = document.querySelector('.favorite-container'); 
-        this.productController = new ProductsController();
         
         this.favoriteImgGol = document.querySelector('.favorite-gol-img');
         this.favoriteTextGol = document.querySelector('.favorite-gol-text');
 
-        this.setProducts();
-        this.favoriteBtns = document.querySelectorAll(".favorite-product i");
-        this.handleFavoriteBtn();
-
-        this.allProducts = document.querySelectorAll('.favorite-product');
-        this.handleAllProducts();
+        this.asyncHandler();
     }
+
+    
 
     header=()=>{
         this.body.innerHTML = '';
@@ -78,33 +77,10 @@ export default class viewFavorite{
         this.body.innerHTML+= 
         `
         <main>
-
             <section class="toggle-section">
-                <section class="toggle-section-flex categorie-telefon">
-                    <img src="svg/phone.svg" alt="">
-                    <p>Telefoane Mobile</p>
-                </section>
 
-                <section class="toggle-section-flex categorie-pc" >
-                    <img src="svg/pc.svg" alt="">
-                    <p>Desktop Pc</p>
-                </section>
-
-                <section class="toggle-section-flex categorie-leptop">
-                    <img src="svg/laptop.svg" alt="">
-                    <p>Leptop / Notebook</p>
-                </section>
-
-                <section class="toggle-section-flex categorie-tv">
-                    <img src="svg/tv.svg" alt="">
-                    <p>Televizoare</p>
-                </section>
-                <section class="toggle-section-flex categorie-audio" >
-                    <img src="svg/audio.svg" alt="">
-                    <p>Sisteme Audio</p>
             </section>
         </section>
-
 
             <section class="favorite-container">
                 <img src="img/favorite.png" class="favorite-gol-img" alt="">
@@ -115,21 +91,77 @@ export default class viewFavorite{
         `
     }
 
-    setProducts=()=>{
+    setToggleCategories= async()=>{
+        let categoris = await this.data.getCategories();
+        
+        this.toggleSection.innerHTML = '';
 
-        let i = 0;
-
-        this.productController.list.forEach(e=>{
-            if(e.favariteStatus == 1){
-                this.toCard(e);
-                i = 1;
+            for(let cat of categoris){
+                this.toggleSection.innerHTML +=
+                `
+                <section class="toggle-section-flex categorie-${cat.name}">
+                    <img src="${cat.image}" alt="">
+                    <p>${cat.description}</p>
+                </section>
+                `;
             }
-        });
 
-        if(i ==1){
+    }
+
+    asyncHandler= async()=>{
+        try{
+            await this.setProducts();
+
+            let favoriteBtns = document.querySelectorAll('.favorite-product i');
+            
+            for(let e of favoriteBtns){
+                let i = 0;
+
+                e.addEventListener('click',async()=>{
+                    let parent = e.parentNode;
+                    let id = parent.getAttribute('id').slice(2);
+                    let currProduct = await this.data.getProductById(id);
+                    
+                    currProduct.cartStatus = false;
+
+                    this.container.removeChild(parent);
+
+                    this.data.updateProduct(currProduct.id, currProduct);
+
+                    let allProducts = await this.data.getProducts();
+                    
+                    let filtrat = allProducts.filter(e=>e.favariteStatus == true);
+
+                });
+
+                // if(i==1){
+                //     this.favoriteImgGol.style.display= 'block';
+                //     this.favoriteTextGol.style.display = 'block';
+                // }
+
+            }
+
+            
+            // this.allProducts = document.querySelectorAll('.favorite-product');
+            // this.handleAllProducts();
+
+        }catch(e){
+            console.log(e);
+        }
+    }
+
+    setProducts= async()=>{
+
+        let allProducts = await this.data.getProducts();
+
+        let filtrat = allProducts.filter(e => e.favariteStatus == true);
+
+        filtrat.forEach(e => this.toCard(e));
+
+
+        if(filtrat.length > 0){
             this.favoriteImgGol.style.display = 'none';
             this.favoriteTextGol.style.display = 'none';
-
         }else{
             this.favoriteImgGol.style.display = 'block';
             this.favoriteTextGol.style.display = 'block';
@@ -140,7 +172,7 @@ export default class viewFavorite{
     toCard=(product)=>{
         this.container.innerHTML +=
         `
-        <section class="favorite-product card-${product.category}">
+        <section class="favorite-product card-${product.category}" id="id${product.id}">
             <img src="${product.image}" alt="">
             <i class="fas fa-heart"></i>
             <h2>${product.name}</h2>
@@ -148,25 +180,6 @@ export default class viewFavorite{
             <h3 class="pret-produs">${product.price} Lei</h3>
         </section>
         `;
-    }
-
-    handleFavoriteBtn=()=>{
-        this.favoriteBtns.forEach(e=>{
-
-            e.addEventListener('click',()=>{
-                let productName = e.parentNode.children[2].textContent;
-                let parent = e.parentNode;
-                this.container.removeChild(parent);
-                this.productController.setFavoriteProduct(productName,0);
-
-                    if(this.container.children.length == 2){
-                        console.log('test');
-                        // NUU MERGE NU INTELEG DE CE!
-                        this.favoriteImgGol.style.display= 'block';
-                        this.favoriteTextGol.style.display = 'block';
-                    }
-            });
-        })
     }
 
     handleBrand=()=>{

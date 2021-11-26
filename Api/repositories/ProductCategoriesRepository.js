@@ -110,4 +110,15 @@ export default class ProductCategoriesRepository{
         }
     }
 
+    //functie ce rpimeste ca parametru id categoriei si returneaza toate obiectele ce contin id respectiv
+
+    getAllCategories = async(id)=>{
+
+        let allProductsCategories= await this.getAllProductCategories();
+
+        let nou = allProductsCategories.filter(e=>e.category_id == id);
+
+        return nou;
+    }
+
 }

@@ -32,6 +32,7 @@ export default class ProductsRepository{
                             obj.description,
                             obj.image,
                             obj.category,
+                            obj.create_date,
                             obj.stock,
                             obj.favariteStatus,
                             obj.cartStatus);

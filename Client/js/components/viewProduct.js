@@ -1,13 +1,14 @@
-import ProductsController from "../controller/productsController.js";
 import viewUserInterface from "./viewUserInterface.js";
 import viewHome from "./viewHome.js";
 import viewFavorite from "./viewFavorite.js";
 import viewCart from "./viewCart.js";
+import Data from "../data.js";
 
 export default class viewProduct{
-    constructor(product, username){
-        this.username = username;
+    constructor(product,productId){
         this.product = product;
+        this.productId = productId;
+
         this.body = document.querySelector('body');
 
         this.header();
@@ -36,12 +37,14 @@ export default class viewProduct{
 
         
         //main
-        this.productController = new ProductsController();
+        this.data = new Data();
+        this.setToggleCategories();
+
         this.productContainer = document.querySelector('.product-container');
         this.productDescription();
 
         this.addCart = document.querySelector('.add-cart');
-        this.addCart.addEventListener('click',this.handleAddCart);
+        this.addCart.addEventListener('click', this.handleAddCart);
 
     }
 
@@ -78,36 +81,32 @@ export default class viewProduct{
         `
         <main style="background-color: white;">
          <section class="toggle-section">
-                <section class="toggle-section-flex categorie-telefon">
-                    <img src="svg/phone.svg" alt="">
-                    <p>Telefoane Mobile</p>
-                </section>
-
-                <section class="toggle-section-flex categorie-pc" >
-                    <img src="svg/pc.svg" alt="">
-                    <p>Desktop Pc</p>
-                </section>
-
-                <section class="toggle-section-flex categorie-leptop">
-                    <img src="svg/laptop.svg" alt="">
-                    <p>Leptop / Notebook</p>
-                </section>
-
-                <section class="toggle-section-flex categorie-tv">
-                    <img src="svg/tv.svg" alt="">
-                    <p>Televizoare</p>
-                </section>
-                <section class="toggle-section-flex categorie-audio" >
-                    <img src="svg/audio.svg" alt="">
-                    <p>Sisteme Audio</p>
+         
             </section>
         </section>
 
-            <section class="product-container">
+            <section class="product-container" id="id${this.productId}">
 
             </section>
         </main>
         `
+    }
+
+    setToggleCategories= async()=>{
+        let categoris = await this.data.getCategories();
+        
+        this.toggleSection.innerHTML = '';
+
+            for(let cat of categoris){
+                this.toggleSection.innerHTML +=
+                `
+                <section class="toggle-section-flex categorie-${cat.name}">
+                    <img src="${cat.image}" alt="">
+                    <p>${cat.description}</p>
+                </section>
+                `;
+            }
+
     }
     
     productDescription=()=>{
@@ -132,15 +131,19 @@ export default class viewProduct{
         `
     }
 
-    handleAddCart=(e)=>{
+    handleAddCart= async (e)=>{
         e.preventDefault();
-        let product = this.productContainer.children[0].textContent;
-        let status = this.productController.getProductCartSatus(product);
+
+        let id = this.productContainer.getAttribute('id').slice(2);
+        let currProduct = await this.data.getProductById(id);
+
         let productRight = document.querySelector('.product-right');
 
-        if(status ==0){
-            this.productController.setProductCartStatus(product,1);
-
+        if(currProduct.cartStatus == false){
+            currProduct.cartStatus = true;
+                        
+            await this.data.updateProduct(currProduct.id,currProduct);
+        
             productRight.innerHTML +=
             `
                 <p class="add-notificare">Produsul ${this.product.name} a fost adaugat in cos!</p>
@@ -183,6 +186,5 @@ export default class viewProduct{
     handleLogOut=()=>{
         let nou = new viewHome();
     }
-
 
 }

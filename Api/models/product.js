@@ -12,6 +12,5 @@ export default class Product{
         this.favariteStatus = favoriteStatus;
         this.cartStatus = cartStatus;
     }
-
     
 }

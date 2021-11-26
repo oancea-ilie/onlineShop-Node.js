@@ -3,30 +3,30 @@
     "id": 1,
     "name": "telefoane",
     "description": "Descriere telefoane",
-    "image": "img1.png"
+    "image": "svg/phone.svg"
   },
   {
     "id": 2,
-    "name": "desktop/pc",
+    "name": "desktop-pc",
     "description": "Descriere desktop",
-    "image": "img1.png"
+    "image": "svg/pc.svg"
   },
   {
     "id": 3,
-    "name": "leptop",
+    "name": "leptopuri",
     "description": "Descriere leptop",
-    "image": "img1.png"
+    "image": "svg/laptop.svg"
   },
   {
     "id": 4,
     "name": "televizoare",
     "description": "Descriere televizoare",
-    "image": "img1.png"
+    "image": "svg/tv.svg"
   },
   {
     "id": 5,
-    "name": "sisteme audio",
+    "name": "sisteme-audio",
     "description": "Descriere sisteme audio",
-    "image": "TEST"
+    "image": "svg/audio.svg"
   }
 ]

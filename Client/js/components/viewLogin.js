@@ -1,6 +1,6 @@
-import CustomersController from "../controller/customersController.js";
 import viewHome from "./viewHome.js";
 import viewUserInterface from "./viewUserInterface.js";
+import Data from "../data.js";
 
 export default class viewLogin{
     constructor(){
@@ -18,7 +18,8 @@ export default class viewLogin{
         this.homeBtn = document.querySelector('.home-btn');
         this.homeBtn.addEventListener('click',this.handleHome);
 
-        this.customerController = new CustomersController();
+        this.data = new Data();
+
     }
 
     header=()=>{
@@ -43,24 +44,27 @@ export default class viewLogin{
         `;
     }
 
-    loginCheck=()=>{
-        let ok = 0;
+    handleLogin=async()=>{
 
-        for(let obj of this.customerController.list){
-            if(obj.email == this.email.value && obj.password ==this.pass.value){
-                let nou = new viewUserInterface(obj.name);
+        try{
+            let customers = await this.data.getCustomers();
+
+            for(let obj of customers){
+                if(obj.email == this.email.value && obj.password == this.pass.value){
+                    let nou = new viewUserInterface();
+                }
             }
+
+        }catch(e){
+        
+            console.log(e);
         }
 
-        return ok;
-    }
-
-    handleLogin=()=>{
-        this.loginCheck();
 
     }
 
     handleHome=()=>{
         let nou = new viewHome();
     }
+
 }

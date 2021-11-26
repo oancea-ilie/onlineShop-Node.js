@@ -78,5 +78,21 @@
     "password": "TEST",
     "billing_address": "3 West Trail",
     "phone": "481-702-6091"
+  },
+  {
+    "id": 10,
+    "name": "TEST2",
+    "email": "test",
+    "password": "test",
+    "billing_address": "3 West Trail",
+    "phone": "481-702-6091"
+  },
+  {
+    "id": 11,
+    "name": "ewqe",
+    "email": "test",
+    "password": "test",
+    "billing_address": "wqewqe",
+    "phone": "ewqewq"
   }
 ]

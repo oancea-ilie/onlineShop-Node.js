@@ -1,12 +1,10 @@
 import viewRegister from "./viewRegister.js"
 import viewLogin from "./viewLogin.js"
-import CategoriesController from "../controller/categoriesController.js";
-import ProductsController from "../controller/productsController.js";
+import Data from "../data.js";
 
 export default class viewHome{
     constructor(){
         this.body = document.querySelector('body');
-
         this.header();
         this.main();
         this.footer();
@@ -25,19 +23,28 @@ export default class viewHome{
         this.registerBtn.addEventListener('click',this.handleRegister);
         this.loginBtn.addEventListener('click',this.handleLogin);
 
-        this.categoryController = new CategoriesController();
-        this.setCategories();
-        this.setToggleCategories();
-
-        this.productController = new ProductsController();
-        this.setProductsToCategories();
-
-        this.favorite = document.querySelectorAll('.main-card-categorie i');
-        this.handleFavorite();
-
-        this.allProducts = document.querySelectorAll('.main-card-categorie');
-        this.handleAllProducts();
+        this.data = new Data();
+        this.productFunctionality();
+        
     }
+
+    productFunctionality= async()=>{
+        try{
+            await this.setCategories();
+            await this.setProductsToCategories();
+            await this.setToggleCategories();
+
+            this.favorite = document.querySelectorAll('.main-card-categorie i');
+            this.handleFavorite();
+
+            this.allProducts = document.querySelectorAll('.main-card-categorie');
+            this.handleAllProducts();
+
+        }catch(e){
+            console.log(e);
+        }
+    }
+
 
     header=()=>{
         this.body.innerHTML = '';
@@ -71,29 +78,8 @@ export default class viewHome{
         `
         <main>
         <section class="toggle-section">
-            <section class="toggle-section-flex categorie-telefon">
-                <img src="svg/phone.svg" alt="">
-                <p>Telefoane Mobile</p>
-            </section>
 
-            <section class="toggle-section-flex categorie-pc" >
-                <img src="svg/pc.svg" alt="">
-                <p>Desktop Pc</p>
-            </section>
 
-            <section class="toggle-section-flex categorie-leptop">
-                <img src="svg/laptop.svg" alt="">
-                <p>Leptop / Notebook</p>
-            </section>
-
-            <section class="toggle-section-flex categorie-tv">
-                <img src="svg/tv.svg" alt="">
-                <p>Televizoare</p>
-            </section>
-            <section class="toggle-section-flex categorie-audio" >
-                <img src="svg/audio.svg" alt="">
-                <p>Sisteme Audio</p>
-            </section>
         </section>
             <section class="main-img-container">
                 <img src="img/cupon.jpg" alt="">
@@ -138,28 +124,90 @@ export default class viewHome{
         `
     }
     
-    setCategories=()=>{
+    setCategories = async()=>{
         this.categorii.innerHTML = '';
+        let categories = await this.data.getCategories();
 
-        for(let obj of this.categoryController.list){
-            this.categoryController.toCard(obj);
+        if(categories){
+            for(let c of categories){
+                this.categorii.innerHTML +=
+                `
+                    <h2>${c.description}</h2>
+                    <section class="main-categorie main-categorie-${c.name}">
+            
+                    </section>
+
+                `
+            }
         }
     }
 
-    setToggleCategories=()=>{
-
+    setToggleCategories= async()=>{
+        let categoris = await this.data.getCategories();
+        
         this.toggleSection.innerHTML = '';
 
-        for(let obj of this.categoryController.list){
-            this.categoryController.toToggleCategories(obj);
-        }
+            for(let cat of categoris){
+                this.toggleSection.innerHTML +=
+                `
+                <section class="toggle-section-flex categorie-${cat.name}">
+                    <img src="${cat.image}" alt="">
+                    <p>${cat.description}</p>
+                </section>
+                `;
+            }
+
     }
 
-    setProductsToCategories=()=>{
+    setProductsToCategories= async(id)=>{
 
-        for(let obj of this.productController.list){
-            this.productController.toCategory(obj);
+        try{
+
+            let producs = await this.data.getProducts(); //toate produsele
+
+            let categoris = await this.data.getCategories(); //toate categoriile
+
+            for(let category of categoris){
+
+                // retine toate productsCategory ce au propietatea category_id == id
+                let  prod_cat = await this.data.getProductsCategoryByCategory(category.id); 
+
+                let cat;
+                if(prod_cat){
+                    cat = document.querySelector(`.main-categorie-${category.name}`);
+
+                    for(let pc of prod_cat){
+
+                        let filtrate = producs.filter(e=>e.id == pc.product_id);
+
+                        filtrate.forEach(e=>{
+                                this.toProduct(e,cat);
+                        });
+                        
+                    }
+                }
+
+            }
+
+
+        }catch(e){
+
+            console.log(e);
         }
+
+    }
+
+    toProduct=(product,categorie)=>{
+        categorie.innerHTML +=
+        `
+        <section class="main-card-categorie">
+            <img src="${product.image}" alt="">
+            <i class="far fa-heart"></i>
+            <h2>${product.name}</h2>
+            <p>${product.description}</p>
+            <h3 class="pret-produs">${product.price} Lei</h3>
+        </section>
+        `;
     }
 
     handleAllProducts=()=>{
@@ -170,7 +218,6 @@ export default class viewHome{
 
         });
     }
-
 
     handleRegister=()=>{
         let nou = new viewRegister();

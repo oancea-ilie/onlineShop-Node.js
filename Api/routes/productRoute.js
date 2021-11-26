@@ -66,7 +66,7 @@ productsRouter.post("/add", async(req,res)=>{
         else if(!product.stock){
             res.status(400).json(`Product STOCK invalid!`);
         }
-        else if(product.favariteStatus == null){
+        else if(!product.favariteStatus == null){
             res.status(400).json(`Product FAVORITE STATUS invalid!`);
         }
         else if(!product.cartStatus == null){

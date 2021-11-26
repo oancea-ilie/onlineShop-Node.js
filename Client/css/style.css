@@ -473,6 +473,7 @@ footer {
   border-radius: 30px;
   margin: 0 1rem;
   margin-bottom: 0.5rem;
+  max-width: 500px;
 }
 .main-avantaje-card i {
   color: #c09f80;
@@ -482,6 +483,19 @@ footer {
 }
 .main-avantaje-card p {
   width: 120px;
+}
+@media (min-width: 425px) {
+  .main-avantaje-card {
+    width: 70%;
+  }
+}
+
+@media (min-width: 425px) {
+  .main-avantaje {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .main-card-categorie {
@@ -521,6 +535,28 @@ footer {
 .main-card-categorie h3 {
   color: #eb0303;
 }
+@media (min-width: 425px) {
+  .main-card-categorie h2 {
+    font-size: 1.3rem;
+  }
+  .main-card-categorie p {
+    font-size: 1.2rem;
+  }
+  .main-card-categorie h3 {
+    font-size: 1.3rem;
+  }
+}
+@media (min-width: 768px) {
+  .main-card-categorie h2 {
+    font-size: 1.5rem;
+  }
+  .main-card-categorie p {
+    font-size: 1.3rem;
+  }
+  .main-card-categorie h3 {
+    font-size: 1.5rem;
+  }
+}
 
 .main-card-categorie:hover {
   box-shadow: -1px 5px 14px -2px #909090;
@@ -531,13 +567,32 @@ footer {
   grid-template-columns: 1fr 1fr;
   margin: 0 0.25rem;
 }
+@media (min-width: 425px) {
+  .main-categorie {
+    grid-template-columns: 1fr 1fr 1fr;
+    max-width: 500px;
+  }
+}
+@media (min-width: 768px) {
+  .main-categorie {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    max-width: 800px;
+  }
+}
+@media (min-width: 1024px) {
+  .main-categorie {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    max-width: 1100px;
+  }
+}
 
 .main-container-categorii {
   display: grid;
+  justify-content: center;
 }
 .main-img-container {
   padding: 1rem;
-  max-width: 425px;
+  max-width: 500px;
   margin: 0 auto;
 }
 .main-img-container img {

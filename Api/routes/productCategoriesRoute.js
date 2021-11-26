@@ -110,4 +110,22 @@ productCategoriesRouter.put("/:id", async(req,res)=>{
     }
 });
 
+productCategoriesRouter.get("/category/:id",async(req,res)=>{
+    try{
+        let {id} = req.params;
+        
+        let rez = await productCategoriesRepository.getAllCategories(id);
+
+        res.status(200).json(rez);
+
+    }catch(e){
+        console.log(e);
+        res.status(500).json("Server Error");
+    }
+
+})
+
+
+
+
 export default productCategoriesRouter;
