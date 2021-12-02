@@ -30,7 +30,6 @@ export default class viewUserInterface{
         this.cardBtn = document.querySelector('.cart-btn');
         this.cardBtn.addEventListener('click',this.handleCardBtn);
 
-
         this.data = new Data();
         this.productFunctionality();
     
@@ -109,15 +108,11 @@ export default class viewUserInterface{
             await this.setProductsToCategories();
             await this.setToggleCategories();
 
-            this.favorite = document.querySelectorAll('.main-card-categorie i');
-            await this.handleFavorite();
-            await this.handleFavoriteStatus();
+            this.categorii.addEventListener('click', this.handleAllProducts);
 
-            this.allProducts = document.querySelectorAll('.main-card-categorie');
-            await this.handleAllProducts();
 
         }catch(e){
-            console.log('ERORE:',e);
+            console.log(e);
         }
     }
 
@@ -169,6 +164,8 @@ export default class viewUserInterface{
                 // retine toate productsCategory ce au propietatea category_id == id
                 let  prod_cat = await this.data.getProductsCategoryByCategory(category.id); 
 
+                // console.log(prod_cat);
+                
                 let cat;
                 if(prod_cat){
                     cat = document.querySelector(`.main-categorie-${category.name}`);
@@ -177,6 +174,7 @@ export default class viewUserInterface{
 
                         let filtrate = producs.filter(e=>e.id == pc.product_id);
 
+                        // console.log(filtrate);
                         filtrate.forEach(e=>{
                                 this.toProduct(e,cat);
                         });
@@ -198,10 +196,10 @@ export default class viewUserInterface{
         categorie.innerHTML +=
         `
         <section class="main-card-categorie" id="id${product.id}">
-            <img src="${product.image}" alt="">
+            <img src="${product.image}" class="product-image">
             <i class="far fa-heart"></i>
-            <h2>${product.name}</h2>
-            <p>${product.description}</p>
+            <h2  class="product-name">${product.name}</h2>
+            <p  class="product-description">${product.description}</p>
             <h3 class="pret-produs">${product.price} Lei</h3>
         </section>
         `;
@@ -227,92 +225,49 @@ export default class viewUserInterface{
         let nou = new viewFavorite();
     }
 
-    handleFavorite= async()=>{
-        this.favorite.forEach((e)=>{
+    handleAllProducts= async(e)=>{
+        let obj = e.target;
 
-                e.addEventListener('click', async ()=>{
-                    let card = e.parentNode;
-                    let id = card.getAttribute('id').slice(2);
-                    let currProduct = await this.data.getProductById(id);
-
-                    if(currProduct.favariteStatus == false){
-                        currProduct.favariteStatus = true;
-                        
-                        await this.data.updateProduct(currProduct.id,currProduct);
-
-                        e.classList.remove('far');
-                        e.classList.remove('fa-heart');
-                
-                        e.classList.add('fas');
-                        e.classList.add('fa-heart');
-                        
-                    }else{
-
-                        currProduct.favariteStatus = false;
-                        await this.data.updateProduct(currProduct.id,currProduct);
-
-                        e.classList.remove('fas');
-                        e.classList.remove('fa-heart');
-                
-                        e.classList.add('far');
-                        e.classList.add('fa-heart');
-                    }
-                });
-
-        });
-    }
-
-    handleFavoriteStatus= async()=>{
-        let allFavoriteIcons = document.querySelectorAll('.main-categorie .fa-heart');
-
-        for(let i = 0; i< allFavoriteIcons.length; i++){
-
-            let card = allFavoriteIcons[i].parentNode;
-
-            let id = card.getAttribute('id').slice(2);
-
-            let currProduct = await this.data.getProductById(id);
-
-            if(currProduct.favariteStatus == true){
-
-                if(allFavoriteIcons[i].classList.contains('far')){
-                    allFavoriteIcons[i].classList.remove('far');
-                }
-
-                allFavoriteIcons[i].classList.add('fas');
-            }else{
-
-                if(allFavoriteIcons[i].classList.contains('fas')){
-                    allFavoriteIcons[i].classList.remove('fas');
-                }
-
-                allFavoriteIcons[i].classList.add('far');
+        // favorite icon
+        if(obj.classList.contains("fa-heart")){
+            if(obj.classList.contains('far')){
+                obj.classList.remove('far');
+                obj.classList.add('fas');
+            }
+            else{
+                obj.classList.remove('fas');
+                obj.classList.add('far');
             }
         }
-    }
 
-    handleAllProducts= async()=>{
-        
-        for(let obj of this.allProducts){
-            
+        // container
+        if(obj.classList.contains("main-card-categorie")){
             let id = obj.getAttribute('id').slice(2);
             let currProduct = await this.data.getProductById(id);
-
-            obj.addEventListener('click',(el)=>{
-                let fav = obj.children[1];
-
-                if(el.target != fav){
-
-                    let nou = new viewProduct(currProduct,currProduct.id);
-                }
-            })
+            let nou = new viewProduct(currProduct,currProduct.id);            
         }
+
+        // altceva
+        if(obj.classList.contains("product-image") 
+            || obj.classList.contains("product-name")
+            || obj.classList.contains("product-description")
+            || obj.classList.contains("pret-produs")
+            ){
+
+            let id = obj.parentNode.getAttribute('id').slice(2);
+            let currProduct = await this.data.getProductById(id);
+            let nou = new viewProduct(currProduct,currProduct.id);  
+        }
+
+    }
+
+    handleLocalStorage=()=>{
+        
     }
 
     handleCardBtn=()=>{
         let nou = new viewCart(this.username);
     }
-
 
     handleLogOut=()=>{
         let nou = new viewHome();

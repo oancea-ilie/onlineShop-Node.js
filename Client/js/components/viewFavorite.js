@@ -31,7 +31,7 @@ export default class viewFavorite{
         this.cardBtn.addEventListener('click',this.handleCardBtn);
 
         //main
-
+        this.favoriteLocalStorage = localStorage.getItem('favorite');
         this.data = new Data();
         this.setToggleCategories();
 
@@ -118,26 +118,28 @@ export default class viewFavorite{
                 let i = 0;
 
                 e.addEventListener('click',async()=>{
+
                     let parent = e.parentNode;
                     let id = parent.getAttribute('id').slice(2);
                     let currProduct = await this.data.getProductById(id);
                     
-                    currProduct.cartStatus = false;
+                    currProduct.favariteStatus = false;
 
                     this.container.removeChild(parent);
 
                     this.data.updateProduct(currProduct.id, currProduct);
 
-                    let allProducts = await this.data.getProducts();
-                    
-                    let filtrat = allProducts.filter(e=>e.favariteStatus == true);
 
                 });
 
-                // if(i==1){
-                //     this.favoriteImgGol.style.display= 'block';
-                //     this.favoriteTextGol.style.display = 'block';
-                // }
+                let allProducts = await this.data.getProducts();
+                    
+                let filtrat = allProducts.filter(e=>e.favariteStatus == true);
+
+                if(filtrat.length ==0){
+                    this.favoriteImgGol.style.display= 'block';
+                    this.favoriteTextGol.style.display = 'block';
+                }
 
             }
 
