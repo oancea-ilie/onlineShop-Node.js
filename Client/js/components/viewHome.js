@@ -18,6 +18,7 @@ export default class viewHome{
         this.searchBtn = document.querySelector('.search-btn');
         this.searchInput = document.querySelector('.search-input');
         this.categorii = document.querySelector('.main-container-categorii');
+        this.navbar = document.querySelector('.navbar');
 
         this.toggleBtn.addEventListener("click",this.handleToggleBtn);
         this.registerBtn.addEventListener('click',this.handleRegister);
@@ -32,6 +33,7 @@ export default class viewHome{
             await this.setCategories();
             await this.setProductsToCategories();
             await this.setToggleCategories();
+            await this.setNavbar();
 
             this.favorite = document.querySelectorAll('.main-card-categorie i');
             this.handleFavorite();
@@ -64,9 +66,7 @@ export default class viewHome{
                     <a href="#" class="login-btn"><i class="fas fa-user-tie"></i></a>
                 </section>
             </section>
-            <section class="last-header">
-                <input type="text" class="search-input">
-                <a href="#" class="search-btn"><i class="fas fa-search"></i></a>
+            <section class="last-header navbar">
             </section>
         </header>
         `
@@ -80,13 +80,11 @@ export default class viewHome{
 
 
         </section>
-            <section class="main-img-container">
-                <img src="img/cupon.jpg" alt="">
-                <h2>Inregistreaza-te acum si primesti un voucher in valoare de <span>20 de lei!</span></h2>
+            <section class="main-img-container">                
             </section>
 
             <section class="main-avantaje">
-                <h2>Avantaje</h2>
+                <h2 class="title">Avantaje</h2>
                 <section class="main-avantaje-card">
                     <i class="fas fa-hand-holding-usd"></i>
                     <p>Economisesti bani</p>
@@ -131,7 +129,7 @@ export default class viewHome{
             for(let c of categories){
                 this.categorii.innerHTML +=
                 `
-                    <h2>${c.description}</h2>
+                    <h2 class="title">${c.description}</h2>
                     <section class="main-categorie main-categorie-${c.name}">
             
                     </section>
@@ -151,6 +149,23 @@ export default class viewHome{
                 `
                 <section class="toggle-section-flex categorie-${cat.name}">
                     <img src="${cat.image}" alt="">
+                    <p>${cat.description}</p>
+                </section>
+                `;
+            }
+
+    }
+
+    setNavbar= async()=>{
+        let categoris = await this.data.getCategories();
+        
+        this.navbar.innerHTML = '';
+
+            for(let cat of categoris){
+                this.navbar.innerHTML +=
+                `
+                <section class="nav-bar-section">
+                    <img src="${cat.image}">
                     <p>${cat.description}</p>
                 </section>
                 `;

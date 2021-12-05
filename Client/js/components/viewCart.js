@@ -36,7 +36,8 @@ export default class viewCart{
         //main
         this.data = new Data();
         this.setToggleCategories();
-
+        this.navbar = document.querySelector('.navbar');
+        this.setNavbar();
         this.cosGolText = document.querySelector('.cos-gol-text');
         this.cosGolImg = document.querySelector('.cos-gol-img');
 
@@ -146,9 +147,7 @@ export default class viewCart{
                     <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i></a>
                 </section>
             </section>
-            <section class="last-header">
-                <input type="text" class="search-input">
-                <a href="#" class="search-btn"><i class="fas fa-search"></i></a>
+            <section class="last-header navbar">
             </section>
         </header>
         `
@@ -165,12 +164,29 @@ export default class viewCart{
 
             <section class="cart-container">
                 <img src="svg/sad.svg" class="cos-gol-img">
-                <p class="cos-gol-text">Ups,cardul este gol!</p>
+                <p class="cos-gol-text">Ups, cardul este gol!</p>
 
             </section>
 
         </main>
         `
+    }
+
+    setNavbar= async()=>{
+        let categoris = await this.data.getCategories();
+        
+        this.navbar.innerHTML = '';
+
+            for(let cat of categoris){
+                this.navbar.innerHTML +=
+                `
+                <section class="nav-bar-section">
+                    <img src="${cat.image}">
+                    <p>${cat.description}</p>
+                </section>
+                `;
+            }
+
     }
 
     setToggleCategories= async()=>{
@@ -244,47 +260,45 @@ export default class viewCart{
     }
 
     handleTrimteComanda= async ()=>{
+        let json = JSON.parse(localStorage.getItem('produseAdaugate'));
+        let arr=[];
+        for(let i of json){
+            arr.push(i);
+        }
+
+        let newOrder ={
+             id: await this.data.OrderNextId(),
+             customer_id: this.clientId,
+             ammount: 0,
+             order_address: `Client ID: ${this.clientId} Adress`,
+             order_date: this.dateCoverter()
+        }
 
 
-        // let json = JSON.parse(localStorage.getItem('produseAdaugate'));
-        // let arr=[];
-        // for(let i of json){
-        //     arr.push(i);
-        // }
+        for(let obj of arr){
+            let productID = obj.product_id;
 
-        // let newOrder ={
-        //      id: await this.data.OrderNextId(),
-        //      customer_id: this.clientId,
-        //      ammount: 0,
-        //      order_address: `Client ID: ${this.clientId} Adress`,
-        //      order_date: this.dateCoverter()
-        // }
+            if(typeof productID == "number"){
+                let product = await this.data.getProductById(productID);
+                let orderDetailsId = await this.data.OrderDetailsNextId();
 
+                let orderDetails={
+                    id: orderDetailsId,
+                    order_id : newOrder.id,
+                    product_id : productID,
+                    price : product.price,
+                    quantity: obj.ammount
+                }
 
-        // for(let obj of arr){
-        //     let productID = obj.product_id;
+                newOrder.ammount += orderDetails.price * orderDetails.quantity;
+                this.data.addOrderDetails(orderDetails);
 
-        //     if(typeof productID == "number"){
-        //         let product = await this.data.getProductById(productID);
-        //         let orderDetailsId = await this.data.OrderDetailsNextId();
-
-        //         let orderDetails={
-        //             id: orderDetailsId,
-        //             order_id : newOrder.id,
-        //             product_id : productID,
-        //             price : product.price,
-        //             quantity: obj.ammount
-        //         }
-
-        //         newOrder.ammount += orderDetails.price * orderDetails.quantity;
-        //         this.data.addOrderDetails(orderDetails);
-
-        //     }
+            }
 
 
-        // }
+        }
 
-        // this.data.addOrder(newOrder);
+        this.data.addOrder(newOrder);
 
     }
 
@@ -367,7 +381,7 @@ export default class viewCart{
 
     }
     
-    setCartSumar=(obj)=>{  
+    setCartSumar=()=>{  
         this.container.innerHTML +=
         `
         <section class="cart-sumar">

@@ -18,6 +18,7 @@ export default class viewUserInterface{
         this.searchBtn = document.querySelector('.search-btn');
         this.searchInput = document.querySelector('.search-input');
         this.categorii = document.querySelector('.main-container-categorii');
+        this.navbar = document.querySelector('.navbar');
 
         this.userBtn = document.querySelector('.user-btn');
         this.logOutBtn = document.querySelector('.logout-btn');
@@ -36,9 +37,6 @@ export default class viewUserInterface{
 
         // local storage
         this.favoriteArr = this.loadLocalFavorite();
-
-        // this.localCart = localStorage.getItem('cart');
-        // this.cartArr = this.loadLS(this.localCart);
 
     }
 
@@ -92,9 +90,7 @@ export default class viewUserInterface{
                     <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i></a>
                 </section>
             </section>
-            <section class="last-header">
-                <input type="text" class="search-input">
-                <a href="#" class="search-btn"><i class="fas fa-search"></i></a>
+            <section class="last-header navbar">
             </section>
         </header>
         `
@@ -129,9 +125,8 @@ export default class viewUserInterface{
                 <p>Sisteme Audio</p>
             </section>
         </section>
-            <section class="main-img-container">
-                <h2>Ai primit un voucher in valoare de: <span>20 de lei!</span></h2>
-            </section>
+        <section class="main-img-container">                
+        </section>
             <section class="main-container-categorii">
             
             </section>
@@ -144,7 +139,8 @@ export default class viewUserInterface{
             await this.setCategories();
             await this.setProductsToCategories();
             await this.setToggleCategories();
-
+            await this.setNavbar();
+            
             this.categorii.addEventListener('click', this.handleAllProducts);
 
 
@@ -161,7 +157,7 @@ export default class viewUserInterface{
             for(let c of categories){
                 this.categorii.innerHTML +=
                 `
-                    <h2>${c.description}</h2>
+                    <h2 class="title">${c.description}</h2>
                     <section class="main-categorie main-categorie-${c.name}">
             
                     </section>
@@ -169,6 +165,23 @@ export default class viewUserInterface{
                 `
             }
         }
+    }
+    
+    setNavbar= async()=>{
+        let categoris = await this.data.getCategories();
+        
+        this.navbar.innerHTML = '';
+
+            for(let cat of categoris){
+                this.navbar.innerHTML +=
+                `
+                <section class="nav-bar-section">
+                    <img src="${cat.image}">
+                    <p>${cat.description}</p>
+                </section>
+                `;
+            }
+
     }
 
     setToggleCategories= async()=>{

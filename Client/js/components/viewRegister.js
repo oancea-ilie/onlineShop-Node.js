@@ -39,7 +39,7 @@ export default class viewRegister{
             <h1>ONLINE SHOP</h1>
         </section>
         <section class="register-main">
-            <h2>Inregistrare</h2>
+            <h2>Inregistreaza-te</h2>
             <p class="eror"></p>
             <section class="register-container">
                 <p>Nume:</p>
@@ -52,8 +52,10 @@ export default class viewRegister{
                 <input type="text" class="address-register">
                 <p>Telefon:</p>
                 <input type="tel" class="phone-register">
-                <a href="#" class="register-btn">Inregistrare</a>
-                <a href="#" class="home-btn">Home</a>
+                <section class="register-btns">
+                    <a href="#" class="register-btn">Inregistrare</a>
+                    <a href="#" class="home-btn">Home</a>
+                </section>
             </section>
         </section>
         `

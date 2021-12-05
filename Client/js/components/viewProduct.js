@@ -40,6 +40,9 @@ export default class viewProduct{
         //main
         this.data = new Data();
         this.setToggleCategories();
+        this.navbar = document.querySelector('.navbar');
+        this.setNavbar();
+
 
         this.productContainer = document.querySelector('.product-container');
         this.productDescription();
@@ -135,9 +138,7 @@ export default class viewProduct{
                     <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i></a>
                 </section>
             </section>
-            <section class="last-header">
-                <input type="text" class="search-input">
-                <a href="#" class="search-btn"><i class="fas fa-search"></i></a>
+            <section class="last-header navbar">
             </section>
         </header>
         `
@@ -159,6 +160,24 @@ export default class viewProduct{
         `
     }
 
+        
+    setNavbar= async()=>{
+        let categoris = await this.data.getCategories();
+        
+        this.navbar.innerHTML = '';
+
+            for(let cat of categoris){
+                this.navbar.innerHTML +=
+                `
+                <section class="nav-bar-section">
+                    <img src="${cat.image}">
+                    <p>${cat.description}</p>
+                </section>
+                `;
+            }
+
+    }
+    
     setToggleCategories= async()=>{
         let categoris = await this.data.getCategories();
         

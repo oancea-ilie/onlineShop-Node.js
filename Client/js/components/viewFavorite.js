@@ -34,7 +34,9 @@ export default class viewFavorite{
         this.favoriteLocalStorage = localStorage.getItem('favorite');
         this.data = new Data();
         this.setToggleCategories();
-
+        this.navbar = document.querySelector('.navbar');
+        this.setNavbar();
+        
         this.container = document.querySelector('.favorite-container'); 
         this.container.addEventListener('click',this.handleAllProducts);
 
@@ -101,9 +103,7 @@ export default class viewFavorite{
                     <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i></a>
                 </section>
             </section>
-            <section class="last-header">
-                <input type="text" class="search-input">
-                <a href="#" class="search-btn"><i class="fas fa-search"></i></a>
+            <section class="last-header navbar">
             </section>
         </header>
         `
@@ -119,12 +119,30 @@ export default class viewFavorite{
         </section>
 
             <section class="favorite-container">
-                <img src="img/favorite.png" class="favorite-gol-img" alt="">
-                <p class="favorite-gol-text">Ups, nu sunt produse favorite!</p>
-
+                <section class="favorite-gol">
+                    <img src="img/favorite.png" class="favorite-gol-img" alt="">
+                    <p class="favorite-gol-text">Ups, nu sunt produse favorite!</p>
+                </section>
             </section>
         </main>
         `
+    }
+    
+    setNavbar= async()=>{
+        let categoris = await this.data.getCategories();
+        
+        this.navbar.innerHTML = '';
+
+            for(let cat of categoris){
+                this.navbar.innerHTML +=
+                `
+                <section class="nav-bar-section">
+                    <img src="${cat.image}">
+                    <p>${cat.description}</p>
+                </section>
+                `;
+            }
+
     }
 
     setToggleCategories= async()=>{
@@ -181,8 +199,10 @@ export default class viewFavorite{
             let p = document.querySelector('.favorite-gol-text');
 
             // nu inteleg de isi pierde referinta this.golImage !!!
-            img.style.display = 'block';
-            p.style.display = 'block';
+            let container1 = document.querySelector('.favorite-container');
+            container1.style.gridTemplateColumns = '1fr';
+            let gol = document.querySelector('.favorite-gol');
+            gol.style.display = 'flex';
         }
 
     }
@@ -192,8 +212,8 @@ export default class viewFavorite{
         let allProducts = await this.data.getProducts();
 
         if(this.favoriteArr.length > 1){
-            this.favoriteImgGol.style.display = 'none';
-            this.favoriteTextGol.style.display = 'none';
+            let gol = document.querySelector('.favorite-gol');
+            gol.style.display = 'none';
             
             for(let i = 0; i<allProducts.length; i++){
                for(let j = 0; j<this.favoriteArr.length; j++){
@@ -205,8 +225,10 @@ export default class viewFavorite{
 
 
         }else{
-            this.favoriteImgGol.style.display = 'block';
-            this.favoriteTextGol.style.display = 'block';
+            let container1 = document.querySelector('.favorite-container');
+            container1.style.gridTemplateColumns = '1fr';
+            let gol = document.querySelector('.favorite-gol');
+            gol.style.display = 'flex';
         }
 
     }

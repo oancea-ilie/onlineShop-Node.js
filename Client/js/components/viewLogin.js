@@ -30,15 +30,17 @@ export default class viewLogin{
         <section class="register-header">
         <h1>ONLINE SHOP</h1>
         </section>
-        <section class="register-main">
+        <section class="register-main login-container">
             <h2>Conecteaza-te</h2>
             <section class="register-container">
                 <p>Email:</p>
                 <input type="text" class="login-email">
                 <p>Parola:</p>
                 <input type="password" class="login-pass">
-                <a href="#" class="login-btn">Conecteaza-te</a>
-                <a href="#" class="home-btn">Home</a>
+                <section class="register-btns">
+                    <a href="#" class="login-btn">Conecteaza-te</a>
+                    <a href="#" class="home-btn">Home</a>
+                </section>
             </section>
         </section>
         `;
