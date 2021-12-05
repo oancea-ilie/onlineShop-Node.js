@@ -77,10 +77,9 @@ export default class viewRegister{
 
     toObj=async()=>{
 
-        let allCustomers = await this.data.getCustomers();
-        let custmerId = allCustomers[allCustomers.length-1].id;
+        let nextId = await this.data.CustomerNextId();
         let obj = {
-            id: custmerId+1,
+            id: nextId,
             name: this.name.value,
             email: this.email.value,
             password: this.pass.value,

@@ -5,7 +5,8 @@ import viewCart from "./viewCart.js";
 import Data from "../data.js";
 
 export default class viewProduct{
-    constructor(product,productId){
+    constructor(product,productId,clientId){
+        this.clientId = clientId;
         this.product = product;
         this.productId = productId;
 
@@ -46,6 +47,72 @@ export default class viewProduct{
         this.addCart = document.querySelector('.add-cart');
         this.addCart.addEventListener('click', this.handleAddCart);
 
+
+        // local storage
+        this.cartArr = this.loadLocalCart();
+        this.orderArr = this.loadLocalOrder();
+
+    }
+
+    //local cart
+    loadLocalCart=()=>{
+        let json = JSON.parse(localStorage.getItem('cart'));
+        let arr=[];
+        
+        for(let i of json){
+            arr.push(i);
+        }
+
+        return arr;
+    }
+
+    InsertLocalCart=(value)=>{
+        this.cartArr.push(value);
+
+        localStorage.setItem('cart', JSON.stringify(this.cartArr));
+
+    }
+    
+    removeLocalCart=(value)=>{
+        if(value !=0 || value !=null ){
+            this.cartArr = this.cartArr.filter(e => e != value);
+            localStorage.setItem('cart', JSON.stringify(this.cartArr));
+        }
+    }
+
+    resetLocalCart=()=>{
+        this.cartArr = [0];
+        localStorage.setItem('cart',JSON.stringify(this.cartArr));
+    }
+
+    //local order
+    loadLocalOrder=()=>{
+        let json = JSON.parse(localStorage.getItem('produseAdaugate'));
+        let arr=[];
+        
+        for(let i of json){
+            arr.push(i);
+        }
+
+        return arr;
+    }
+
+    InsertLocalOrder=(obj)=>{
+        this.orderArr.push(obj);
+
+        localStorage.setItem('produseAdaugate', JSON.stringify(this.orderArr));
+    }
+
+    removeLocalOrder=(obj)=>{
+        if(value !=0 || value !=null ){
+            this.orderArr = this.orderArr.filter(e => e != obj);
+            localStorage.setItem('produseAdaugate', JSON.stringify(this.orderArr));
+        }
+    }
+
+    resetLocalOrder=()=>{
+        this.orderArr = [0];
+        localStorage.setItem('produseAdaugate',JSON.stringify(this.orderArr));
     }
 
     header=()=>{
@@ -131,30 +198,50 @@ export default class viewProduct{
         `
     }
 
+    dateCoverter=()=>{
+        let date = new Date();
+
+        let year = date.getFullYear();
+        let month  = date.getMonth();
+        let day = date.getDate();
+        let hour = date.getHours();
+        let minutes = date.getMinutes();
+
+        return `${hour}:${minutes} ${day}/${month}/${year}`;
+    }
+
     handleAddCart= async (e)=>{
         e.preventDefault();
 
         let id = this.productContainer.getAttribute('id').slice(2);
         let currProduct = await this.data.getProductById(id);
-
         let productRight = document.querySelector('.product-right');
 
-        if(currProduct.cartStatus == false){
-            currProduct.cartStatus = true;
-                        
-            await this.data.updateProduct(currProduct.id,currProduct);
-        
+        let ok = 0;
+        for(let obj of this.cartArr){
+            if(obj == currProduct.id){
+                ok = 1;
+            }
+        }
+
+        if(ok == 0){
+            let order = {
+                product_id: currProduct.id,
+                customer_id: this.clientId,
+                ammount: 1
+            }
+            
+            this.InsertLocalOrder(order);
+            this.InsertLocalCart(currProduct.id);
+
             productRight.innerHTML +=
-            `
-                <p class="add-notificare">Produsul ${this.product.name} a fost adaugat in cos!</p>
-            `
+            `<p class="add-notificare">Produsul ${currProduct.name} a fost adaugat in cos!</p>`;
         }else{
             productRight.innerHTML +=
-            `
-                <p class="add-notificare" >Produsul ${this.product.name} este deja in cos!</p>
-            `
+            `<p class="add-notificare" >Produsul ${currProduct.name} este deja in cos!</p>`;
         }
     }
+
 
     handleToggleBtn=()=>{
         if(this.onOf ==0){
@@ -172,15 +259,15 @@ export default class viewProduct{
     }
 
     handleFavoriteBtn=()=>{
-        let nou = new viewFavorite(this.username);
+        let nou = new viewFavorite(this.clientId);
     }
 
     handleCartBtn=()=>{
-        let nou = new viewCart(this.username);
+        let nou = new viewCart(this.clientId);
     }
 
     handleBrand=()=>{
-        let nou = new viewUserInterface(this.username);
+        let nou = new viewUserInterface(this.clientId);
     }
 
     handleLogOut=()=>{

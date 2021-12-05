@@ -5,8 +5,8 @@ import viewCart from "./viewCart.js";
 import Data from "../data.js";
 
 export default class viewFavorite{
-    constructor(username){
-        this.username = username;
+    constructor(clientId){
+        this.clientId = clientId;
         this.body = document.querySelector('body');
 
         this.header();
@@ -36,14 +36,50 @@ export default class viewFavorite{
         this.setToggleCategories();
 
         this.container = document.querySelector('.favorite-container'); 
-        
+        this.container.addEventListener('click',this.handleAllProducts);
+
         this.favoriteImgGol = document.querySelector('.favorite-gol-img');
         this.favoriteTextGol = document.querySelector('.favorite-gol-text');
 
-        this.asyncHandler();
+
+        // local storage
+        this.favoriteArr = this.loadLocalFavorite();
+        this.setProducts();
+
     }
 
+    //local storage
+    loadLocalFavorite=()=>{
+        let json = JSON.parse(localStorage.getItem('favorite'));
+        let arr=[];
+        
+        for(let i of json){
+            arr.push(i);
+        }
+
+        return arr;
+    }
+
+    InsertLocalFavorite=(value)=>{
+        this.favoriteArr.push(value);
+
+        localStorage.setItem('favorite', JSON.stringify(this.favoriteArr));
+
+    }
     
+    removeLocalFavorite=(value)=>{
+        if(value !=0 || value !=null ){
+            this.favoriteArr = this.favoriteArr.filter(e => e != value);
+            localStorage.setItem('favorite', JSON.stringify(this.favoriteArr));
+        }
+    }
+
+    resetLocalFavorite=()=>{
+        this.favoriteArr = [0];
+        localStorage.setItem('favorite',JSON.stringify(this.favoriteArr));
+    }
+
+    // local storage
 
     header=()=>{
         this.body.innerHTML = '';
@@ -108,62 +144,66 @@ export default class viewFavorite{
 
     }
 
-    asyncHandler= async()=>{
-        try{
-            await this.setProducts();
+    handleAllProducts= async(e)=>{
+        let obj = e.target;
 
-            let favoriteBtns = document.querySelectorAll('.favorite-product i');
+        // favorite icon
+        if(obj.classList.contains("fa-heart")){
+            let id = obj.parentNode.getAttribute('id').slice(2);
+            id = parseInt(id);
+
+            this.container.removeChild(obj.parentNode);
+            this.removeLocalFavorite(id);
             
-            for(let e of favoriteBtns){
-                let i = 0;
-
-                e.addEventListener('click',async()=>{
-
-                    let parent = e.parentNode;
-                    let id = parent.getAttribute('id').slice(2);
-                    let currProduct = await this.data.getProductById(id);
-                    
-                    currProduct.favariteStatus = false;
-
-                    this.container.removeChild(parent);
-
-                    this.data.updateProduct(currProduct.id, currProduct);
-
-
-                });
-
-                let allProducts = await this.data.getProducts();
-                    
-                let filtrat = allProducts.filter(e=>e.favariteStatus == true);
-
-                if(filtrat.length ==0){
-                    this.favoriteImgGol.style.display= 'block';
-                    this.favoriteTextGol.style.display = 'block';
-                }
-
-            }
-
-            
-            // this.allProducts = document.querySelectorAll('.favorite-product');
-            // this.handleAllProducts();
-
-        }catch(e){
-            console.log(e);
         }
+
+        // container
+        if(obj.classList.contains("favorite-product")){
+            let id = obj.getAttribute('id').slice(2);
+            let currProduct = await this.data.getProductById(id);
+            let nou = new viewProduct(currProduct,currProduct.id);            
+        }
+
+        // altceva
+        if(obj.classList.contains("product-image") 
+            || obj.classList.contains("product-name")
+            || obj.classList.contains("product-description")
+            || obj.classList.contains("pret-produs")
+            ){
+
+            let id = obj.parentNode.getAttribute('id').slice(2);
+            let currProduct = await this.data.getProductById(id);
+            let nou = new viewProduct(currProduct,currProduct.id);  
+        }
+        
+        if(this.favoriteArr.length == 1){
+            let img = document.querySelector('.favorite-gol-img');
+            let p = document.querySelector('.favorite-gol-text');
+
+            // nu inteleg de isi pierde referinta this.golImage !!!
+            img.style.display = 'block';
+            p.style.display = 'block';
+        }
+
     }
 
     setProducts= async()=>{
 
         let allProducts = await this.data.getProducts();
 
-        let filtrat = allProducts.filter(e => e.favariteStatus == true);
-
-        filtrat.forEach(e => this.toCard(e));
-
-
-        if(filtrat.length > 0){
+        if(this.favoriteArr.length > 1){
             this.favoriteImgGol.style.display = 'none';
             this.favoriteTextGol.style.display = 'none';
+            
+            for(let i = 0; i<allProducts.length; i++){
+               for(let j = 0; j<this.favoriteArr.length; j++){
+                    if( allProducts[i].id == this.favoriteArr[j]){
+                        this.toCard(allProducts[i]);
+                    }
+               }
+            }
+
+
         }else{
             this.favoriteImgGol.style.display = 'block';
             this.favoriteTextGol.style.display = 'block';
@@ -174,37 +214,22 @@ export default class viewFavorite{
     toCard=(product)=>{
         this.container.innerHTML +=
         `
-        <section class="favorite-product card-${product.category}" id="id${product.id}">
-            <img src="${product.image}" alt="">
+        <section class="favorite-product" id="id${product.id}">
+            <img src="${product.image}" class="product-image">
             <i class="fas fa-heart"></i>
-            <h2>${product.name}</h2>
-            <p>${product.description}</p>
+            <h2 class="product-name">${product.name}</h2>
+            <p class="product-description">${product.description}</p>
             <h3 class="pret-produs">${product.price} Lei</h3>
         </section>
         `;
     }
 
     handleBrand=()=>{
-        let nou = new viewUserInterface(this.username);
-    }
-
-    handleAllProducts=()=>{
-        this.allProducts.forEach(e=>{
-            e.addEventListener('click',(el)=>{
-                let fav = e.children[1];
-                if(el.target!= fav){
-                    let productName = e.children[2].textContent;
-                    let product = this.productController.getProductByName(productName);
-
-                    let nou = new viewProduct(product,this.username);
-                }
-            })
-
-        });
+        let nou = new viewUserInterface(this.clientId);
     }
 
     handleCardBtn=()=>{
-        let nou = new viewCart(this.username);
+        let nou = new viewCart(this.clientId);
     }
 
     handleToggleBtn=()=>{

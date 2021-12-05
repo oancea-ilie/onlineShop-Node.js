@@ -165,6 +165,218 @@ export default class Data{
          }
     }
 
+    async getOrders(){
+        try{
+            const response = await this.api("http://localhost:3000/api/orders");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async addOrder(newOrder){
+        try{
+            const response = await this.api(`http://localhost:3000/api/orders/add`,'POST', newOrder);
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async addOrderDetails(newOrderDetails){
+        try{
+            const response = await this.api(`http://localhost:3000/api/orders/details/add`,'POST', newOrderDetails);
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+
+    async OrderNextId(){
+        try{
+            const response = await this.api("http://localhost:3000/api/orders/id/next");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async CustomerNextId(){
+        try{
+            const response = await this.api("http://localhost:3000/api/customers/id/next");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async OrderDetailsNextId(){
+        try{
+            const response = await this.api("http://localhost:3000/api/orders/details/id/next");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async ProductCategoriesNextId(){
+        try{
+            const response = await this.api("http://localhost:3000/api/products/categories/id/next");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async ProductOptionsNextId(){
+        try{
+            const response = await this.api("http://localhost:3000/api/products/options/id/next");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async ProductsNextId(){
+        try{
+            const response = await this.api("http://localhost:3000/api/products/id/next");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async CategoriesNextId(){
+        try{
+            const response = await this.api("http://localhost:3000/api/categories/id/next");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async OptionsNextId(){
+        try{
+            const response = await this.api("http://localhost:3000/api/options/id/next");
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+
+
 
 
 }

@@ -5,7 +5,8 @@ import viewCart from "./viewCart.js";
 import Data from "../data.js";
 
 export default class viewUserInterface{
-    constructor(){
+    constructor(clientId){
+        this.clientId = clientId;
         this.body = document.querySelector('body');
         this.header();
         this.main();
@@ -32,7 +33,43 @@ export default class viewUserInterface{
 
         this.data = new Data();
         this.productFunctionality();
+
+        // local storage
+        this.favoriteArr = this.loadLocalFavorite();
+
+        // this.localCart = localStorage.getItem('cart');
+        // this.cartArr = this.loadLS(this.localCart);
+
+    }
+
+    loadLocalFavorite=()=>{
+        let json = JSON.parse(localStorage.getItem('favorite'));
+        let arr=[];
+        
+        for(let i of json){
+            arr.push(i);
+        }
+
+        return arr;
+    }
+
+    InsertLocalFavorite=(value)=>{
+        this.favoriteArr.push(value);
+
+        localStorage.setItem('favorite', JSON.stringify(this.favoriteArr));
+
+    }
     
+    removeLocalFavorite=(value)=>{
+        if(value !=0 || value !=null ){
+            this.favoriteArr = this.favoriteArr.filter(e => e != value);
+            localStorage.setItem('favorite', JSON.stringify(this.favoriteArr));
+        }
+    }
+
+    resetLocalFavorite=()=>{
+        this.favoriteArr = [];
+        localStorage.setItem('favorite',JSON.stringify(this.favoriteArr));
     }
 
     header=()=>{
@@ -148,7 +185,6 @@ export default class viewUserInterface{
                 </section>
                 `;
             }
-
     }
 
     setProductsToCategories= async(id)=>{
@@ -163,8 +199,6 @@ export default class viewUserInterface{
 
                 // retine toate productsCategory ce au propietatea category_id == id
                 let  prod_cat = await this.data.getProductsCategoryByCategory(category.id); 
-
-                // console.log(prod_cat);
                 
                 let cat;
                 if(prod_cat){
@@ -174,7 +208,6 @@ export default class viewUserInterface{
 
                         let filtrate = producs.filter(e=>e.id == pc.product_id);
 
-                        // console.log(filtrate);
                         filtrate.forEach(e=>{
                                 this.toProduct(e,cat);
                         });
@@ -193,16 +226,40 @@ export default class viewUserInterface{
     }
 
     toProduct=(product,categorie)=>{
-        categorie.innerHTML +=
-        `
-        <section class="main-card-categorie" id="id${product.id}">
-            <img src="${product.image}" class="product-image">
-            <i class="far fa-heart"></i>
-            <h2  class="product-name">${product.name}</h2>
-            <p  class="product-description">${product.description}</p>
-            <h3 class="pret-produs">${product.price} Lei</h3>
-        </section>
-        `;
+        let ok = 0;
+
+
+        for(let e of this.favoriteArr){
+            if(e == product.id){
+                ok = 1;
+            }
+        }
+
+
+        if(ok == 0){
+            categorie.innerHTML +=
+            `
+            <section class="main-card-categorie" id="id${product.id}">
+                <img src="${product.image}" class="product-image">
+                <i class="far fa-heart"></i>
+                <h2  class="product-name">${product.name}</h2>
+                <p  class="product-description">${product.description}</p>
+                <h3 class="pret-produs">${product.price} Lei</h3>
+            </section>
+            `;
+        }else{
+            categorie.innerHTML +=
+            `
+            <section class="main-card-categorie" id="id${product.id}">
+                <img src="${product.image}" class="product-image">
+                <i class="fas fa-heart"></i>
+                <h2  class="product-name">${product.name}</h2>
+                <p  class="product-description">${product.description}</p>
+                <h3 class="pret-produs">${product.price} Lei</h3>
+            </section>
+            `;
+        }
+        
     }
 
     handleToggleBtn=()=>{
@@ -222,7 +279,7 @@ export default class viewUserInterface{
 
     handleBigFavorite=()=>{
 
-        let nou = new viewFavorite();
+        let nou = new viewFavorite(this.clientId);
     }
 
     handleAllProducts= async(e)=>{
@@ -230,13 +287,19 @@ export default class viewUserInterface{
 
         // favorite icon
         if(obj.classList.contains("fa-heart")){
+            let id = obj.parentNode.getAttribute('id').slice(2);
+            id = parseInt(id);
+            let currProduct = await this.data.getProductById(id);
+
             if(obj.classList.contains('far')){
                 obj.classList.remove('far');
                 obj.classList.add('fas');
+                this.InsertLocalFavorite(id);
             }
             else{
                 obj.classList.remove('fas');
                 obj.classList.add('far');
+                this.removeLocalFavorite(id);
             }
         }
 
@@ -244,7 +307,7 @@ export default class viewUserInterface{
         if(obj.classList.contains("main-card-categorie")){
             let id = obj.getAttribute('id').slice(2);
             let currProduct = await this.data.getProductById(id);
-            let nou = new viewProduct(currProduct,currProduct.id);            
+            let nou = new viewProduct(currProduct,currProduct.id,this.clientId);            
         }
 
         // altceva
@@ -256,17 +319,13 @@ export default class viewUserInterface{
 
             let id = obj.parentNode.getAttribute('id').slice(2);
             let currProduct = await this.data.getProductById(id);
-            let nou = new viewProduct(currProduct,currProduct.id);  
+            let nou = new viewProduct(currProduct,currProduct.id,this.clientId);  
         }
 
     }
 
-    handleLocalStorage=()=>{
-        
-    }
-
     handleCardBtn=()=>{
-        let nou = new viewCart(this.username);
+        let nou = new viewCart(this.clientId);
     }
 
     handleLogOut=()=>{

@@ -51,7 +51,7 @@ export default class viewLogin{
 
             for(let obj of customers){
                 if(obj.email == this.email.value && obj.password == this.pass.value){
-                    let nou = new viewUserInterface();
+                    let nou = new viewUserInterface(obj.id);
                 }
             }
 

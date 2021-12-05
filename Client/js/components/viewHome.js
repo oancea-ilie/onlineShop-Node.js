@@ -25,7 +25,6 @@ export default class viewHome{
 
         this.data = new Data();
         this.productFunctionality();
-        
     }
 
     productFunctionality= async()=>{
