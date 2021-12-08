@@ -1146,4 +1146,107 @@ footer {
   background-color: #c09f80;
 }
 
+.user-details h1 {
+  text-align: center;
+  color: #76323F;
+}
+
+.panel {
+  background-color: #76323F;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+.panel a {
+  margin: 0.5rem 0;
+  padding-bottom: 0.3rem;
+  color: white;
+  text-decoration: none;
+  border-bottom: 1px solid #c09f80;
+  transition: 0.3s all;
+}
+.panel a:hover {
+  color: #c09f80;
+}
+
+.istoric-comenzi {
+  background-color: #c09f80;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+.istoric-comenzi .comanda p {
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+.istoric-comenzi .comanda a {
+  margin: 1rem 0;
+  padding-bottom: 0.3rem;
+  color: #76323F;
+  text-decoration: none;
+  border-bottom: 1px solid #c09f80;
+  transition: 0.3s all;
+}
+.istoric-comenzi .comanda a:hover {
+  color: white;
+}
+
+.date-personale p {
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.container .information {
+  background-color: #c09f80;
+  color: white;
+  padding: 1rem;
+}
+.container .information h2 {
+  text-align: center;
+  padding: 1rem;
+}
+.container .information p {
+  padding: 0.4rem 0;
+  margin: 0 auto 1rem auto;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #76323F;
+}
+.container .information p span {
+  color: #76323F;
+  font-weight: bold;
+}
+.container .information .comanda {
+  border: 1px solid #76323F;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+.container .information .comanda a {
+  display: block;
+  color: #76323F;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  transition: 0.3s all;
+  max-width: 330px;
+}
+.container .information .comanda a span {
+  color: #76323F;
+  font-weight: bold;
+}
+.container .information .comanda a:hover {
+  background-color: #76323F;
+  color: white;
+}
+
 /*# sourceMappingURL=style.css.map */

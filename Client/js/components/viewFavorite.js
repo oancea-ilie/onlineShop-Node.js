@@ -3,6 +3,7 @@ import viewUserInterface from "./viewUserInterface.js";
 import viewProduct from "./viewProduct.js";
 import viewCart from "./viewCart.js";
 import Data from "../data.js";
+import viewUserAccount from "./viewUserAccount.js";
 
 export default class viewFavorite{
     constructor(clientId){
@@ -21,7 +22,10 @@ export default class viewFavorite{
         
         this.searchBtn = document.querySelector('.search-btn');
         this.searchInput = document.querySelector('.search-input');
+
         this.userBtn = document.querySelector('.user-btn');
+        this.userBtn.addEventListener('click',this.handleUserBtn);
+
         this.logOutBtn = document.querySelector('.logout-btn');
 
         this.logOutBtn.addEventListener('click',this.handleLogOut);
@@ -244,6 +248,10 @@ export default class viewFavorite{
             <h3 class="pret-produs">${product.price} Lei</h3>
         </section>
         `;
+    }
+
+    handleUserBtn=()=>{
+        let nou = new viewUserAccount(this.clientId);
     }
 
     handleBrand=()=>{

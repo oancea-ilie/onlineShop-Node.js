@@ -125,6 +125,25 @@ export default class Data{
          }
     }
 
+    async getCustomerById(id){
+        try{
+            const response = await this.api(`http://localhost:3000/api/customers/${id}`);
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
     async updateProduct(id,newProduct){
         try{
             const response = await this.api(`http://localhost:3000/api/products/${id}`,'PUT', newProduct);
@@ -184,6 +203,25 @@ export default class Data{
          }
     }
 
+    async getOrderById(id){
+        try{
+            const response = await this.api(`http://localhost:3000/api/orders/${id}`);
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
     async addOrder(newOrder){
         try{
             const response = await this.api(`http://localhost:3000/api/orders/add`,'POST', newOrder);
@@ -222,6 +260,43 @@ export default class Data{
          }
     }
 
+    async deleteOrderDetails(id){
+        try{
+            const response = await this.api(`http://localhost:3000/api/orders/details/${id}`,'DELETE');
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async deleteOrder(id){
+        try{
+            const response = await this.api(`http://localhost:3000/api/orders/${id}`,'DELETE');
+            
+            if(response.status==200){
+                return response.json();
+
+            }else{
+
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
 
     async OrderNextId(){
         try{
@@ -374,6 +449,60 @@ export default class Data{
 
          }
     }
+
+    async getOrdersByClientId(id){
+        try{
+            let allOrders = await this.api("http://localhost:3000/api/orders");
+            allOrders = await allOrders.json();
+
+            let arr = [];
+            if(allOrders){
+                for(let order of allOrders){
+                    if(order.customer_id == id){
+                        arr.push(order);
+                    }
+                }
+
+                return arr;
+            }
+            else{
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
+    async getOrdersDetailsByOrderId(id){
+        try{
+            let allOrdersDetails = await this.api("http://localhost:3000/api/orders/details");
+            allOrdersDetails = await allOrdersDetails.json();
+
+            let arr = [];
+
+            if(allOrdersDetails){
+                for(let orderDetails of allOrdersDetails){
+                    if(orderDetails.order_id == id){
+                        arr.push(orderDetails);
+                    }
+                }
+
+                return arr;
+            }
+            else{
+                return null;
+            }
+
+         }catch(e){
+
+            console.log(e);
+
+         }
+    }
+
 
 
 

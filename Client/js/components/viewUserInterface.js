@@ -3,6 +3,7 @@ import viewFavorite from "./viewFavorite.js"
 import viewProduct from "./viewProduct.js";
 import viewCart from "./viewCart.js";
 import Data from "../data.js";
+import viewUserAccount from "./viewUserAccount.js";
 
 export default class viewUserInterface{
     constructor(clientId){
@@ -15,12 +16,12 @@ export default class viewUserInterface{
         this.toggleSection = document.querySelector(".toggle-section");
         this.onOf = 0;
         this.brand = document.querySelector('.brand');
-        this.searchBtn = document.querySelector('.search-btn');
-        this.searchInput = document.querySelector('.search-input');
         this.categorii = document.querySelector('.main-container-categorii');
         this.navbar = document.querySelector('.navbar');
 
         this.userBtn = document.querySelector('.user-btn');
+        this.userBtn.addEventListener('click',this.handleUserDetails);
+
         this.logOutBtn = document.querySelector('.logout-btn');
         this.logOutBtn.addEventListener('click',this.handleLogOut);
 
@@ -335,6 +336,10 @@ export default class viewUserInterface{
             let nou = new viewProduct(currProduct,currProduct.id,this.clientId);  
         }
 
+    }
+
+    handleUserDetails=()=>{
+        let nou = new viewUserAccount(this.clientId);
     }
 
     handleCardBtn=()=>{

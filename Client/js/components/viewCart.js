@@ -1,8 +1,8 @@
 import viewHome from "./viewHome.js"
 import viewUserInterface from "./viewUserInterface.js";
-import viewProduct from "./viewProduct.js";
 import viewFavorite from "./viewFavorite.js";
 import Data from "../data.js";
+import viewUserAccount from "./viewUserAccount.js";
 
 
 export default class viewCart{
@@ -22,7 +22,10 @@ export default class viewCart{
         
         this.searchBtn = document.querySelector('.search-btn');
         this.searchInput = document.querySelector('.search-input');
+
         this.userBtn = document.querySelector('.user-btn');
+        this.userBtn.addEventListener('click',this.handleUserBtn);
+        
         this.logOutBtn = document.querySelector('.logout-btn');
 
         this.logOutBtn.addEventListener('click',this.handleLogOut);
@@ -300,6 +303,22 @@ export default class viewCart{
 
         this.data.addOrder(newOrder);
 
+        let p = document.createElement('p');
+        p.textContent = 'Comanda a fost inregistrata!';
+        p.style.color = 'green';
+        p.style.textAlign = 'center';
+        p.style.fontSize = '1.2rem ';
+        p.style.paddingTop = '1rem';
+        this.container.appendChild(p);
+
+        setTimeout( ()=>{
+            this.container.innerHTML = '';
+            this.resetLocalCart();
+            this.resetLocalOrder();
+            let nou = new viewUserInterface(this.clientId);
+        },3000);
+
+
     }
 
     handleCartContainerClick= async(e)=>{
@@ -391,6 +410,10 @@ export default class viewCart{
             <a href="#" class="trimite-comanda">Trimite comanda <i class="fas fa-angle-double-right"></i></a>
         </section>
         `
+    }
+
+    handleUserBtn=()=>{
+        let nou = new viewUserAccount(this.clientId);
     }
 
     handleBrand=()=>{
